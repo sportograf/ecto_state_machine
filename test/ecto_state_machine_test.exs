@@ -72,6 +72,14 @@ defmodule EctoStateMachineTest do
     end
   end
 
+  test "on a changeset", context do
+    preceding_changeset = Ecto.Changeset.change(context[:unconfirmed_user])
+    changeset = User.confirm(preceding_changeset)
+    assert changeset.valid? == true
+    assert changeset.changes.rules == "confirmed"
+    assert Map.keys(changeset.changes) == ~w(confirmed_at rules)a
+  end
+
   describe "can_?" do
     test "#can_confirm?", context do
       assert User.can_confirm?(context[:unconfirmed_user])    == true
